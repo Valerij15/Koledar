@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
+
     <head>
+
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +11,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
         <style>
             .gumb{
                 width: 100px;
@@ -23,26 +26,39 @@
             .sredina{
                 right: 60px;
             }
-            
         </style>
+
         <title>Koledar</title>
+
     </head>
+
     <body>
-        <div class = "container center"><h2 class = "grey-text text-darken-1">Petek</h1></div>
-                % for i in range(1, 43):
-                    %if i % 7 == 1:
-                        <div class="container center">
-                    % end
-                    % if i < zacetek_meseca:
-                        <a href = "#" class = "gumb btn-large white gray-text"></a>
-                    % elif (i - zacetek_meseca + 1) <= stevilo_dni :
-                        <a href = "#" class = "gumb btn-large white black-text">{{i - zacetek_meseca + 1}}</a>
-                    % else:
-                        <a href = "#" class = "gumb btn-large white gray-text"></a>
-                    % end   
-                    % if i % 7 == 0:
-                        </div>
-                    % end
+
+        <div class = "container center"><a href = "#" style = "margin-bottom: 30px; margin-right: 15px;"class = "btn"><i class = "material-icons">navigate_before</i></a><h2 style="display: inline;" class = "grey-text text-darken-1">Petek</h2><a href = "#" style = "margin-bottom: 30px; margin-left: 15px;"class = "btn"><i class = "material-icons">navigate_next</i></a></div>
+
+        % for i in range(1, 43):
+
+            %if i % 7 == 1:
+                <div class="container center">
+                    
+            % end
+
+            % if i < zacetek_meseca:
+                <a href = "#" class = "gumb btn-large white gray-text"></a>
+
+            % elif (i - zacetek_meseca + 1) <= stevilo_dni :
+                <a href = "#" class = "gumb btn-large white black-text">{{i - zacetek_meseca + 1}}</a>
+
+            % else:
+                <a href = "#" class = "gumb btn-large white gray-text"></a>
+
+            % end
+
+            % if i % 7 == 0:
+                </div>
+
+            % end
+    
     </body>
 
 
