@@ -10,6 +10,7 @@ class Datum:
         self.dan = int(self.datum.strftime("%d"))
         self.mesec = int(self.datum.strftime("%m"))
         self.leto = int(self.datum.strftime("%Y"))
+        self.tabela_datumov = self.naredi_tabelo()
         
     def danasnji_datum(self):
         return datetime.datetime.now()
@@ -18,7 +19,7 @@ class Datum:
         return monthrange(self.leto, self.mesec)[1]
     
     def ime_meseca(self):
-        meseci = ["januar", "februar", "marec", "april", "maj", "junij", "julij", "avgust", "september", "oktober", "november", "december"]
+        meseci = ["Januar", "Februar", "Marec", "April", "Maj", "Junij", "Julij", "Avgust", "September", "Oktober", "November", "December"]
         return meseci[self.mesec - 1]
         
     def zacetek_meseca(self):
@@ -33,6 +34,27 @@ class Datum:
         self.dan = int(self.datum.strftime("%d"))
         self.mesec = int(self.datum.strftime("%m"))
         self.leto = int(self.datum.strftime("%Y"))
+        self.tabela_datumov = self.naredi_tabelo()
+    
+    def naredi_tabelo(self):
+        tabela = []
+        prvi_teden = datetime.date(self.leto, self.mesec, 1)
+        zacetek_meseca = int(prvi_teden.strftime("%w"))
+        if zacetek_meseca == 0:
+            zacetek_meseca = 7
+        konec_meseca = self.stevilo_dni_v_mesecu() + zacetek_meseca - 1
+        prejsnji_teden = prvi_teden + relativedelta(days = -(zacetek_meseca - 1))
+        naslednji_teden = datetime.date(self.leto, self.mesec, self.stevilo_dni_v_mesecu()) + relativedelta(days = 1)
+        for i in range(1, 43):
+            if i < zacetek_meseca:
+                tabela.append((int(prejsnji_teden.strftime("%d")), 0))
+                prejsnji_teden += relativedelta(days = 1)
+            elif i > konec_meseca:
+                tabela.append((int(naslednji_teden.strftime("%d")), 0))
+                naslednji_teden += relativedelta(days = 1)
+            else:
+                tabela.append((i- zacetek_meseca + 1, 1))
+        return tabela
 
 
 class Uporabnik:

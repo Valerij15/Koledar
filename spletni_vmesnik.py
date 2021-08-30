@@ -4,7 +4,7 @@ import model
 
 @bottle.route('/')
 def osnovna_stran():
-    return bottle.template("osnovna_stran.html", mesec= model.poskus.ime_meseca(), leto = model.poskus.leto, stevilo_dni = model.poskus.stevilo_dni_v_mesecu(), zacetek_meseca = model.poskus.zacetek_meseca())
+    return bottle.template("osnovna_stran.html", mesec= model.poskus.ime_meseca(), leto = model.poskus.leto, tabela = model.poskus.tabela_datumov)
 
 @bottle.get('/naslednji_mesec/')
 def naslednji_mesec():

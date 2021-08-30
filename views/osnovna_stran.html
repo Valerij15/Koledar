@@ -47,14 +47,11 @@
                     
             % end
 
-            % if i < zacetek_meseca:
-                <a href = "#" class = "gumb btn-large white gray-text"></a>
+            % if tabela[i-1][1] == 0:
+                <a href = "#" class = "gumb btn-large white grey-text">{{tabela[i-1][0]}}</a>
 
-            % elif (i - zacetek_meseca + 1) <= stevilo_dni :
-                <a href = "#" class = "gumb btn-large white black-text">{{i - zacetek_meseca + 1}}</a>
-
-            % else:
-                <a href = "#" class = "gumb btn-large white gray-text"></a>
+            % else :
+                <a href = "#" class = "gumb btn-large white black-text">{{tabela[i-1][0]}}</a>
 
             % end
 
@@ -62,6 +59,7 @@
                 </div>
 
             % end
+
         % end
 
     </body>
