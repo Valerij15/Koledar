@@ -33,8 +33,12 @@
     </head>
 
     <body>
+            
+        <div class = "container center">
 
-        <div class = "container center"><a href = "#" style = "margin-bottom: 30px; margin-right: 15px;"class = "btn"><i class = "material-icons">navigate_before</i></a><h2 style="display: inline;" class = "grey-text text-darken-1">Petek</h2><a href = "#" style = "margin-bottom: 30px; margin-left: 15px;"class = "btn"><i class = "material-icons">navigate_next</i></a></div>
+            <a href = "/prejsnji_mesec/" style = "margin-bottom: 30px; margin-right: 15px;" name = "gumb" class = "btn"><i class = "material-icons">navigate_before</i></a><h2 style="display: inline;" class = "grey-text text-darken-1">Petek</h2><a href = "/naslednji_mesec/" style = "margin-bottom: 30px; margin-left: 15px;" class = "btn"><i class = "material-icons">navigate_next</i></a>
+        
+        </div>
 
         % for i in range(1, 43):
 
@@ -58,7 +62,8 @@
                 </div>
 
             % end
-    
+        % end
+
     </body>
 
 

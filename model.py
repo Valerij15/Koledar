@@ -1,12 +1,15 @@
 import datetime
 from calendar import monthrange
+from dateutil.relativedelta import relativedelta
 
 class Datum:
+
     def __init__(self):
-        self.stevilo_dneva_v_tednu = int(self.danasnji_datum().strftime("%w"))
-        self.dan = int(self.danasnji_datum().strftime("%d"))
-        self.mesec = int(self.danasnji_datum().strftime("%m"))
-        self.leto = int(self.danasnji_datum().strftime("%Y"))
+        self.datum = self.danasnji_datum()
+        self.stevilo_dneva_v_tednu = int(self.datum.strftime("%w"))
+        self.dan = int(self.datum.strftime("%d"))
+        self.mesec = int(self.datum.strftime("%m"))
+        self.leto = int(self.datum.strftime("%Y"))
         
     def danasnji_datum(self):
         return datetime.datetime.now()
@@ -16,6 +19,17 @@ class Datum:
         
     def zacetek_meseca(self):
         return 8 + (self.stevilo_dneva_v_tednu - (self.dan % 7))
+
+    def dodaj_mesece(self, n):
+        self.datum = self.datum + relativedelta(months=n)
+        self.posodobi_spremenljivke()
+    
+    def posodobi_spremenljivke(self):
+        self.stevilo_dneva_v_tednu = int(self.datum.strftime("%w"))
+        self.dan = int(self.datum.strftime("%d"))
+        self.mesec = int(self.datum.strftime("%m"))
+        self.leto = int(self.datum.strftime("%Y"))
+
 
 class Uporabnik:
 
