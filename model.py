@@ -16,6 +16,10 @@ class Datum:
         
     def stevilo_dni_v_mesecu(self):
         return monthrange(self.leto, self.mesec)[1]
+    
+    def ime_meseca(self):
+        meseci = ["januar", "februar", "marec", "april", "maj", "junij", "julij", "avgust", "september", "oktober", "november", "december"]
+        return meseci[self.mesec - 1]
         
     def zacetek_meseca(self):
         return 8 + (self.stevilo_dneva_v_tednu - (self.dan % 7))
