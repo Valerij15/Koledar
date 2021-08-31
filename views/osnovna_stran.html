@@ -48,8 +48,10 @@
             % end
 
             % if tabela[i-1][1] == 0:
-                <a href = "#" class = "gumb btn-large white grey-text">{{tabela[i-1][0]}}</a>
+                <a href = "#" class = "gumb btn-large white grey-text" onclick="myFunction()">{{tabela[i-1][0]}}</a>
 
+            %elif tabela[i-1][1] == 2:
+                <a href = "#" style = "border: 2px solid red;" class = "gumb btn-large white black-text">{{tabela[i-1][0]}}</a>
             % else :
                 <a href = "#" class = "gumb btn-large white black-text">{{tabela[i-1][0]}}</a>
 
@@ -63,6 +65,4 @@
         % end
 
     </body>
-
-
 </html>

@@ -53,7 +53,10 @@ class Datum:
                 tabela.append((int(naslednji_teden.strftime("%d")), 0))
                 naslednji_teden += relativedelta(days = 1)
             else:
-                tabela.append((i- zacetek_meseca + 1, 1))
+                if(self.mesec == int(self.danasnji_datum().strftime("%m")) and self.leto == int(self.danasnji_datum().strftime("%Y")) and (i- zacetek_meseca + 1) == int(self.danasnji_datum().strftime("%d")) ):
+                    tabela.append((i- zacetek_meseca + 1, 2))
+                else:
+                    tabela.append((i- zacetek_meseca + 1, 1))
         return tabela
 
 
