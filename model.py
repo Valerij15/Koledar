@@ -8,17 +8,17 @@ class Koledar:
         self.datum = datum
         self.dogodki = dogodki
         self.tabela_datumov = self.naredi_tabelo_datumov()
-        self.vklopljen = (False, 0)
+        self.vklopljen = (False, -1)
 
     def dodaj_mesece(self, n):
         self.datum.dodaj_mesece(n)
         self.tabela_datumov = self.naredi_tabelo_datumov()
 
     def vklopi(self, i):
-        if self.vklopljen[1] == i:
+        if self.vklopljen[1] == i or self.vklopljen[1] == -1:
             self.vklopljen = (not (self.vklopljen[0]), i)
         else:
-            self.vklopljen = (self.vklopljen[0], i)
+            self.vklopljen = (True, i)
 
     def naredi_tabelo_datumov(self):
         tabela = []
