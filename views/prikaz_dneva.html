@@ -1,0 +1,18 @@
+<div class="row right">
+    <div class="col 1">
+        <div class="card" style = "width:350px;">
+            <div class="card-content" style="font-size: 20px;">
+                <span class="card-title">{{tabela[vklopljen][0].dan}}. {{tabela[vklopljen][0].ime_meseca()}} {{tabela[vklopljen][0].leto}} </span>
+                Zanimivosti:
+                <br>
+                Dogodki:
+                <ul>
+                %for dogodek in tabela[vklopljen][2]:
+                    <li>{{dogodek[1]}}</li>
+                %end
+                </ul>
+                    <a href="#" class="btn"><i class="material-icons left">add_circle_outline</i>Dodaj dogodek</a>
+            </div>
+        </div>
+    </div>
+</div>

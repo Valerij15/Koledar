@@ -37,9 +37,6 @@
             .sredina{
                 right: 60px;
             }
-            table, th, td {
-                border: 1px white;
-            }
         </style>
 
         <title>Koledar</title>
@@ -47,77 +44,35 @@
     </head>
 
     <body>
-        <table width="100%">
-            <tr>
-                <td width = "20%"></td>
-                <td width = "60%">
-                    <div class = "container center">
+        <div class = "container center">
 
-                        <a href = "/prejsnji_mesec/" style = "margin-bottom: 30px; margin-right: 15px;" name = "gumb" class = "btn"><i class = "material-icons">navigate_before</i></a><h2 style="display: inline;" class = "grey-text text-darken-1">{{mesec}} {{leto}}</h2><a href = "/naslednji_mesec/" style = "margin-bottom: 30px; margin-left: 15px;" class = "btn"><i class = "material-icons">navigate_next</i></a>
+            <a href = "/prejsnji_mesec/" style = "margin-bottom: 30px; margin-right: 15px;" name = "gumb" class = "btn"><i class = "material-icons">navigate_before</i></a><h2 style="display: inline;" class = "grey-text text-darken-1">{{mesec}} {{leto}}</h2><a href = "/naslednji_mesec/" style = "margin-bottom: 30px; margin-left: 15px;" class = "btn"><i class = "material-icons">navigate_next</i></a>
                     
-                    </div>
+        </div>
+        <div class = "row">
+            <div class ="col l2"></div>
+            <div class = "col l8">
+                % for i in range(1, 43):
 
-                    % for i in range(1, 43):
-
-                        %if i % 7 == 1:
-                            <div class="container center">
-                                
-                        % end
-
-                        % if tabela[i-1][3] == 0:
-                            %if vklopljen[1] == i-1 and vklopljen[0]:
-                                <a href = "/vklopi{{i-1}}/" class = "gumb2 btn-large white grey-text">{{tabela[i-1][0]}}</a>
-                            %else:
-                                <a href = "/vklopi{{i-1}}/" class = "gumb btn-large white grey-text">{{tabela[i-1][0]}}</a>
-                            %end
-                        % else :
-                            %if vklopljen[1] == i-1 and vklopljen[0]:
-                                <a href = "/vklopi{{i-1}}/" class = "gumb2 btn-large white black-text">{{tabela[i-1][0]}}</a>
-                            %else:
-                                <a href = "/vklopi{{i-1}}/" class = "gumb btn-large white black-text">{{tabela[i-1][0]}}</a>
-                            %end
-                        % end
-
-                        % if i % 7 == 0:
-                            </div>
-
-                        % end
-
+                    %if i % 7 == 1:
+                        <div class="container center">                    
                     % end
 
-                </td>
+                    %if vklopljen == i-1:
+                        <a href = "/vklopi{{i-1}}/" class = "gumb2 btn-large white {{tabela[i-1][1]}}-text">{{tabela[i-1][0].dan}}</a>
+                    %else:
+                        <a href = "/vklopi{{i-1}}/" class = "gumb btn-large white {{tabela[i-1][1]}}-text">{{tabela[i-1][0].dan}}</a>
+                    %end
 
-                % if vklopljen[0]:
-
-                    <td width = "20%">
-                        <div class="row right">
-                            <div class="col 1">
-                                <div class="card" style = "width:350px;">
-                                    <div class="card-content">
-                                        <span class="card-title">{{tabela[vklopljen[1]][0]}}. {{tabela[vklopljen[1]][1]}} {{tabela[vklopljen[1]][2]}} </span>
-                                        Zanimivosti:
-                                        <br>
-                                        Dogodki:
-                                        <ul>
-                                        % for dogodek in tabela[vklopljen[1]][4]:
-                                            <li>{{dogodek[1]}}</li>
-                                        % end
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                    % if i % 7 == 0:
                         </div>
-                    </td>
-
-                % else:
-
-                    <td width = "20%"></td>
+                    % end
 
                 % end
-
-            </tr>
-
-        </table>
-
+            </div>
+            <div class = "col l2">
+                % include('prikaz_dneva.html', vklopljen = vklopljen, tabela = tabela)
+            </div>
+        </div>
     </body>
 </html>

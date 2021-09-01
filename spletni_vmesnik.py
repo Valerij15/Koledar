@@ -8,19 +8,19 @@ def osnovna_stran():
 
 @bottle.get('/naslednji_mesec/')
 def naslednji_mesec():
-    model.poskus.koledar.vklopljen = (False, -1)
+    model.poskus.koledar.vklopljen = 1
     model.poskus.koledar.dodaj_mesece(1)
     bottle.redirect("/")
 
 @bottle.get('/prejsnji_mesec/')
 def prejsnji_mesec():
-    model.poskus.koledar.vklopljen = (False, -1)
+    model.poskus.koledar.vklopljen = 1
     model.poskus.koledar.dodaj_mesece(-1)
     bottle.redirect("/")
 
 @bottle.get('/vklopi<i>/')
 def vklopi(i):
-    model.poskus.koledar.vklopi(int(i))
+    model.poskus.koledar.preklopi(int(i))
     bottle.redirect("/")
 
 bottle.run(debugger= True)

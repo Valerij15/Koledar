@@ -4,61 +4,59 @@ from dateutil.relativedelta import relativedelta
 
 class Koledar:
 
-    def __init__(self, datum, dogodki):
+    def __init__(self, datum):
         self.datum = datum
-        self.dogodki = dogodki
+        self.dogodki = []
+        self.stevilo_dogodkov = 0
         self.tabela_datumov = self.naredi_tabelo_datumov()
-        self.vklopljen = (False, -1)
+        self.vklopljen = 0
 
     def dodaj_mesece(self, n):
         self.datum.dodaj_mesece(n)
         self.tabela_datumov = self.naredi_tabelo_datumov()
 
-    def vklopi(self, i):
-        if self.vklopljen[1] == i or self.vklopljen[1] == -1:
-            self.vklopljen = (not (self.vklopljen[0]), i)
-        else:
-            self.vklopljen = (True, i)
+    def preklopi(self, i):
+        self.vklopljen = i
 
-    def posodobi(self, dogodki):
-        self.dogodki = dogodki
+    def dodaj_dogodek(self, ime, čas):
+        self.dogodki.append(Dogodek(self.stevilo_dogodkov, ime, čas))
+        self.stevilo_dogodkov += 1
         self.tabela_datumov = self.naredi_tabelo_datumov()
 
     def naredi_tabelo_datumov(self):
         tabela = []
-        prvi_teden = Datum(datetime.datetime(self.datum.leto, self.datum.mesec, 1))
-        zacetek_meseca = prvi_teden.stevilo_dneva_v_tednu()
+        prvi_dan = Datum(1, self.datum.mesec, self.datum.leto)
+        zacetek_meseca = prvi_dan.stevilo_dneva_v_tednu()
         konec_meseca = self.datum.stevilo_dni_v_mesecu() + zacetek_meseca - 1
-        prejsnji_teden = Datum(datetime.datetime(prvi_teden.leto, prvi_teden.mesec, prvi_teden.dan))
-        prejsnji_teden.dodaj_dneve(-(zacetek_meseca - 1))
+        zacetek_koledarja = Datum(1, self.datum.mesec, self.datum.leto)
+        zacetek_koledarja.dodaj_dneve(-(zacetek_meseca - 1))
         for i in range(1, 43):
             if i < zacetek_meseca or i > konec_meseca:
-                tabela.append((prejsnji_teden.dan, prejsnji_teden.ime_meseca(), prejsnji_teden.leto,  0, self.naredi_tabelo_dogodkov(prejsnji_teden)))
+                tabela.append((Datum(zacetek_koledarja.dan, zacetek_koledarja.mesec, zacetek_koledarja.leto), "grey", self.naredi_tabelo_dogodkov(zacetek_koledarja)))
             else:
-                tabela.append((prejsnji_teden.dan, prejsnji_teden.ime_meseca(), prejsnji_teden.leto, 1, self.naredi_tabelo_dogodkov(prejsnji_teden)))
-            prejsnji_teden.dodaj_dneve(1)
+                tabela.append((Datum(zacetek_koledarja.dan, zacetek_koledarja.mesec, zacetek_koledarja.leto), "black", self.naredi_tabelo_dogodkov(zacetek_koledarja)))
+            zacetek_koledarja.dodaj_dneve(1)
         return tabela
     
     def naredi_tabelo_dogodkov(self, dan):
         tab = []
         for dogodek in self.dogodki:
-            if not(dogodek.datum.datum < dan.datum)  and not(dogodek.datum.datum > dan.datum):
+            if dogodek.datum.je_enak(dan):
                 tab.append((dogodek.id, dogodek.ime))
         return tab
 
 
 class Datum:
 
-    def __init__(self, datum = datetime.datetime(2021,9,1), dogodki = []):
-        self.datum = datum
-        self.dogodki = dogodki
-        self.dan = int(self.datum.strftime("%d"))
-        self.mesec = int(self.datum.strftime("%m"))
-        self.leto = int(self.datum.strftime("%Y"))
-        
-    def danasnji_datum(self):
-        return datetime.datetime.now()
-        
+    def __init__(self, dan, mesec, leto):
+        self.datum = datetime.datetime(leto, mesec, dan)
+        self.dan = dan
+        self.mesec = mesec
+        self.leto = leto
+    
+    def je_enak(self, drugi):
+        return not(drugi.datum < self.datum) and not(drugi.datum > self.datum)
+           
     def stevilo_dni_v_mesecu(self):
         return monthrange(self.leto, self.mesec)[1]
     
@@ -91,20 +89,8 @@ class Uporabnik:
 
     def __init__(self, username):
         self.username = username
-        self.stevilo_dogodkov = 0
-        self.datum = Datum()
-        self.dogodki = []
-        self.koledar = Koledar(self.datum, self.dogodki)
-
-    def dodaj_dogodek(self, ime, datum, opis = ''):
-        self.dogodki.append(Dogodek(self.stevilo_dogodkov, ime, datum, opis))
-        self.koledar.posodobi(self.dogodki)
-        self.stevilo_dogodkov += 1
-
-    def izpisi_dogodke(self):
-        for dogodek in self.dogodki:
-            print(f' Ime dogodka: {dogodek.ime}\n Datum dogodka: {dogodek.datum}\n Opis dogodka: {dogodek.opis}')
-            print('')
+        self.datum = Datum(int(datetime.datetime.today().strftime("%d")), int(datetime.datetime.today().strftime("%m")), int(datetime.datetime.today().strftime("%Y")))
+        self.koledar = Koledar(self.datum)
 
 class Dogodek:
 
@@ -115,10 +101,10 @@ class Dogodek:
         self.opis = opis
 
 poskus = Uporabnik("Valerij")
-poskus.dodaj_dogodek("hmm", Datum())
-poskus.dodaj_dogodek("ree", Datum())
-poskus.dodaj_dogodek("yo", Datum())
-poskus.dodaj_dogodek("hfffsdfsm", Datum())
+poskus.koledar.dodaj_dogodek("hmm", Datum(1,9,2021))
+poskus.koledar.dodaj_dogodek("ree", Datum(1,9,2021))
+poskus.koledar.dodaj_dogodek("yo", Datum(1,9,2021))
+poskus.koledar.dodaj_dogodek("hfffsdfsm", Datum(1,9,2021))
 
 
 
