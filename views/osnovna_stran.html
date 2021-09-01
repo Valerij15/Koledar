@@ -84,25 +84,39 @@
                         % end
 
                     % end
+
                 </td>
+
                 % if vklopljen[0]:
+
                     <td width = "20%">
                         <div class="row right">
                             <div class="col 1">
-                            <div class="card blue-grey darken-1" style = "width:350px;">
-                                <div class="card-content white-text">
-                                <span class="card-title">{{tabela[vklopljen[1]][0]}}. {{tabela[vklopljen[1]][1]}} {{tabela[vklopljen[1]][2]}} </span>
-                                <p>I am a very simple card. I am good at containing small bits of information.
-                                I am convenient because I require little markup to use effectively.</p>
+                                <div class="card" style = "width:350px;">
+                                    <div class="card-content">
+                                        <span class="card-title">{{tabela[vklopljen[1]][0]}}. {{tabela[vklopljen[1]][1]}} {{tabela[vklopljen[1]][2]}} </span>
+                                        Zanimivosti:
+                                        <br>
+                                        Dogodki:
+                                        <ul>
+                                        % for dogodek in tabela[vklopljen[1]][4]:
+                                            <li>{{dogodek[1]}}</li>
+                                        % end
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                         </div>
                     </td>
+
                 % else:
+
                     <td width = "20%"></td>
+
                 % end
+
             </tr>
+
         </table>
 
     </body>
