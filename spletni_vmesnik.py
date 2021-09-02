@@ -23,4 +23,11 @@ def vklopi(i):
     model.poskus.koledar.preklopi(int(i))
     bottle.redirect("/")
 
-bottle.run(debugger= True)
+@bottle.post('/dodaj_dogodek/')
+def dodaj_dogodek():
+    ime = bottle.request.forms.getunicode('ime_dogodka')
+    opis = bottle.request.forms.getunicode('opis_dogodka')
+    model.poskus.koledar.dodaj_dogodek(ime, model.poskus.koledar.tabela_datumov[model.poskus.koledar.vklopljen][0], opis)
+    bottle.redirect("/")
+
+bottle.run()

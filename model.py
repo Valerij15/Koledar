@@ -18,8 +18,8 @@ class Koledar:
     def preklopi(self, i):
         self.vklopljen = i
 
-    def dodaj_dogodek(self, ime, čas):
-        self.dogodki.append(Dogodek(self.stevilo_dogodkov, ime, čas))
+    def dodaj_dogodek(self, ime, čas, opis = ''):
+        self.dogodki.append(Dogodek(self.stevilo_dogodkov, ime, čas, opis))
         self.stevilo_dogodkov += 1
         self.tabela_datumov = self.naredi_tabelo_datumov()
 
@@ -42,7 +42,7 @@ class Koledar:
         tab = []
         for dogodek in self.dogodki:
             if dogodek.datum.je_enak(dan):
-                tab.append((dogodek.id, dogodek.ime))
+                tab.append(dogodek)
         return tab
 
 
@@ -101,10 +101,7 @@ class Dogodek:
         self.opis = opis
 
 poskus = Uporabnik("Valerij")
-poskus.koledar.dodaj_dogodek("hmm", Datum(1,9,2021))
-poskus.koledar.dodaj_dogodek("ree", Datum(1,9,2021))
-poskus.koledar.dodaj_dogodek("yo", Datum(1,9,2021))
-poskus.koledar.dodaj_dogodek("hfffsdfsm", Datum(1,9,2021))
+
 
 
 
