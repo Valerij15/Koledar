@@ -8,18 +8,27 @@ class Koledar:
         self.datum = datum
         self.dogodki = []
         self.stevilo_dogodkov = 0
+        self.dodaj_praznike()
         self.tabela_datumov = self.naredi_tabelo_datumov()
         self.vklopljen = 0
 
     def dodaj_mesece(self, n):
+        prejsnje_leto = self.datum.leto
         self.datum.dodaj_mesece(n)
+        if not (self.datum.leto == prejsnje_leto):
+            self.dodaj_praznike()
         self.tabela_datumov = self.naredi_tabelo_datumov()
 
     def preklopi(self, i):
         self.vklopljen = i
 
-    def dodaj_dogodek(self, ime, čas, opis = ''):
-        self.dogodki.append(Dogodek(self.stevilo_dogodkov, ime, čas, opis))
+    def dodaj_dogodek(self, ime, časod, časdo = 0, opis = '', tip = 'dogodek'):
+        if(časdo == 0):
+            časdo = časod
+        while(not časod.je_enak(časdo)):
+                self.dogodki.append(Dogodek(self.stevilo_dogodkov, ime, Datum(časod.dan, časod.mesec, časod.leto), 0, opis, tip))
+                časod.dodaj_dneve(1)
+        self.dogodki.append(Dogodek(self.stevilo_dogodkov, ime, Datum(časod.dan, časod.mesec, časod.leto), 0, opis, tip))
         self.stevilo_dogodkov += 1
         self.tabela_datumov = self.naredi_tabelo_datumov()
 
@@ -44,6 +53,25 @@ class Koledar:
             if dogodek.datum.je_enak(dan):
                 tab.append(dogodek)
         return tab
+
+    def oblikuj_datum(self, neoblikovan):
+
+        if(neoblikovan == ''):
+            return self.tabela_datumov[self.vklopljen][0]
+
+        else:
+            neoblikovan = neoblikovan.replace(",", "")
+            oblikovan = neoblikovan.split()
+            tab = ['Jan', 'Feb', 'Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+            mesec = tab.index(oblikovan[0]) + 1
+            dan = int(oblikovan[1])
+            leto = int(oblikovan[2])
+            return Datum(dan, mesec, leto)
+    
+    def dodaj_praznike(self):
+        prazniki = [("novo leto", 1, 1)]
+        for praznik in prazniki:
+            self.dodaj_dogodek(praznik[0], Datum(praznik[1], praznik[2], self.datum.leto), 0, '', "praznik")
 
 
 class Datum:
@@ -94,11 +122,16 @@ class Uporabnik:
 
 class Dogodek:
 
-    def __init__(self, id, ime, datum, opis = ''):
+    def __init__(self, id, ime, datumod, datumdo = 0, opis = '', tip = 'dogodek'):
         self.id = id
         self.ime = ime
-        self.datum = datum
+        self.tip = tip
+        self.datum = datumod
         self.opis = opis
+        if(datumdo == 0):
+            self.datumdo = datumod
+        else:
+            self.datumdo = datumdo
 
 poskus = Uporabnik("Valerij")
 

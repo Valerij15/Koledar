@@ -81,12 +81,21 @@
                         <div class="card" style = "width:350px;">
                             <div class="card-content" style="font-size: 20px;">
                                 <span class="card-title">{{tabela[vklopljen][0].dan}}. {{tabela[vklopljen][0].ime_meseca()}} {{tabela[vklopljen][0].leto}} </span>
-                                Zanimivosti:
+                                Prazniki:
+                                <div class="collection">
+                                    %for dogodek in tabela[vklopljen][2]:
+                                        %if dogodek.tip == "praznik":
+                                            <a class = "modal-trigger collection-item" href="#poglej_dogodek{{dogodek.id}}">{{dogodek.ime}}</a>
+                                        %end
+                                    %end
+                                </div>
                                 <br>
                                 Dogodki:
                                 <div class="collection">
                                     %for dogodek in tabela[vklopljen][2]:
-                                        <a class = "modal-trigger collection-item" href="#poglej_dogodek{{dogodek.id}}">{{dogodek.ime}}</a>
+                                        %if dogodek.tip == "dogodek":
+                                            <a class = "modal-trigger collection-item" href="#poglej_dogodek{{dogodek.id}}">{{dogodek.ime}}</a>
+                                        %end
                                     %end
                                 </div>
                                 <a href="#dodaj_dogodek" class = "btn modal-trigger"><i class="material-icons left">add_circle_outline</i>Dodaj dogodek</a>
@@ -106,15 +115,16 @@
                             <label for="ime_dogodka">Ime dogodka</label>
                         </div>
 
+                        
                         <div class = "input-field">
                             <input name = "datumod" type="text" id="datumod" class="datepicker">
-                            <label for = "datumod">Začetek dogodka:</label>
+                            <label for = "datumod">Začetek dogodka (pusti prazno za izbrani datum) </label>
                         </div>
 
                         
                         <div class = "input-field">
                             <input name = "datumdo" type="text" id="datumdo" class="datepicker">
-                            <label for = "datumdo">Konec dogodka:</label>
+                            <label for = "datumdo">Konec dogodka (pusti prazno za izbrani datum)</label>
                         </div>
 
                         <div class = "input-field">
@@ -122,7 +132,9 @@
                             <label for="opis_dogodka">Opis dogodka</label>
                         </div>
 
-                        <input type="submit" value="Dodaj">           
+                        <div class="row">
+                            <button class="btn waves-effect waves-light" type="submit" name="action">Dodaj dogodek</button>
+                        </div>         
                     </form>       
                 </div>
             </div>
@@ -143,7 +155,6 @@
             $(document).ready(function(){
                 $('.modal').modal();
                 $('.datepicker').datepicker()({
-                    autoClose: true
                 });
             });
         </script>
