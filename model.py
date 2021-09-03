@@ -7,7 +7,7 @@ class Koledar:
     def __init__(self, datum):
         self.datum = datum
         self.dogodki = []
-        self.prazniki = [("novo leto", 1, 1)]
+        self.prazniki = [("novo leto", 1, 1, "opis")]
         self.stevilo_dogodkov = 0
         self.tabela_datumov = self.naredi_tabelo_datumov()
         self.vklopljen = 0
@@ -20,8 +20,9 @@ class Koledar:
         self.vklopljen = i
 
     def dodaj_dogodek(self, ime, časod, časdo = 0, opis = ''):
-        if(časdo == 0):
+        if(časdo == 0 or časod.je_vecji_od(časdo)):
             časdo = časod
+
         self.dogodki.append(Dogodek(self.stevilo_dogodkov, ime, časod, časdo, opis))
         self.stevilo_dogodkov += 1
         self.tabela_datumov = self.naredi_tabelo_datumov()
@@ -78,12 +79,15 @@ class Koledar:
     
     def naredi_tabelo_zanimivosti(self, dan):
         tab = []
+        id = 0
         zdaj = Datum(int(datetime.datetime.now().strftime("%d")), int(datetime.datetime.now().strftime("%m")), int(datetime.datetime.now().strftime("%Y")))
         if dan.je_enak(zdaj):
-            tab.append(("Današnji dan", zdaj))
+            tab.append((id, "Današnji dan", zdaj, "hmm"))
+            id += 1
         for praznik in self.prazniki:
             if(dan.dan == praznik[1] and dan.mesec == praznik[2]):
-                tab.append((praznik[0], Datum(praznik[1], praznik[2], dan.leto)))
+                tab.append((id, praznik[0], Datum(praznik[1], praznik[2], dan.leto), praznik[3]))
+                id += 1
         return tab
 
 
@@ -118,6 +122,9 @@ class Datum:
     def dodaj_dneve(self, n):
         self.datum = self.datum + relativedelta(days=n)
         self.posodobi_spremenljivke()
+    
+    def je_vecji_od(self, drugi):
+        return (self.datum > drugi.datum)
     
     def posodobi_spremenljivke(self):
         self.dan = int(self.datum.strftime("%d"))

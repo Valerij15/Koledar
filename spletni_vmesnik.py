@@ -27,9 +27,9 @@ def vklopi(i):
 def dodaj_dogodek():
     ime = bottle.request.forms.getunicode('ime_dogodka')
     opis = bottle.request.forms.getunicode('opis_dogodka')
-    datumod = bottle.request.forms.getunicode('datumod')
-    datumdo = bottle.request.forms.getunicode('datumdo')
-    model.poskus.koledar.dodaj_dogodek(ime, model.poskus.koledar.oblikuj_datum(datumod),model.poskus.koledar.oblikuj_datum(datumdo), opis)
+    datumod = model.poskus.koledar.oblikuj_datum(bottle.request.forms.getunicode('datumod'))
+    datumdo = model.poskus.koledar.oblikuj_datum(bottle.request.forms.getunicode('datumdo'))
+    model.poskus.koledar.dodaj_dogodek(ime, datumod, datumdo, opis)
     bottle.redirect("/")
 
 @bottle.get('/izbrisi_dogodek<i>/')

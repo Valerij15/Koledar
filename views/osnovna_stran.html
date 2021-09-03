@@ -94,6 +94,19 @@
                 </div>
             </div>
         %end
+        %for zanimivost in tabela[vklopljen][3]:
+            <div id = "poglej_zanimivost{{zanimivost[0]}}" class = "modal">
+                <div class = "modal-content">
+                    <h4>{{zanimivost[1]}}</h4>
+                    <b>Datum:</b> {{zanimivost[2].dan}}.{{zanimivost[2].mesec}}.{{zanimivost[2].leto}}
+                    <br>
+                    <b>Opis:</b>
+                    <p>
+                        {{zanimivost[3]}}
+                    </p>
+                </div>
+            </div>
+        %end
 
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
