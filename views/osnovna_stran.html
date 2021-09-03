@@ -49,6 +49,12 @@
     </head>
 
     <body>
+        <nav class= "nav-wraper indigo">
+            <ul>
+                <li><a href ="#">Home</a></li>
+            </ul>
+        </nav>
+        <br>
         <div class = "container center">
 
             <a href = "/prejsnji_mesec/" style = "margin-bottom: 30px; margin-right: 15px;" name = "gumb" class = "btn"><i class = "material-icons">navigate_before</i></a><h2 style="display: inline;" class = "grey-text text-darken-1">{{mesec}} {{leto}}</h2><a href = "/naslednji_mesec/" style = "margin-bottom: 30px; margin-left: 15px;" class = "btn"><i class = "material-icons">navigate_next</i></a>
@@ -59,92 +65,32 @@
             <div class = "col l8">
                 % for i in range(1, 43):
 
-                    %if i % 7 == 1:
-                        <div class="container center">                    
-                    % end
-
-                    %if vklopljen == i-1:
-                        <a href = "/vklopi{{i-1}}/" class = "gumb2 btn-large white {{tabela[i-1][1]}}-text">{{tabela[i-1][0].dan}}</a>
-                    %else:
-                        <a href = "/vklopi{{i-1}}/" class = "gumb btn-large white {{tabela[i-1][1]}}-text">{{tabela[i-1][0].dan}}</a>
-                    %end
-
-                    % if i % 7 == 0:
-                        </div>
-                    % end
+                %include('koledar.html', tabela = tabela, vklopljen = vklopljen, i = i)
 
                 % end
             </div>
             <div class = "col l2">
-                <div class="row right">
-                    <div class="col 1">
-                        <div class="card" style = "width:350px;">
-                            <div class="card-content" style="font-size: 20px;">
-                                <span class="card-title">{{tabela[vklopljen][0].dan}}. {{tabela[vklopljen][0].ime_meseca()}} {{tabela[vklopljen][0].leto}} </span>
-                                Prazniki:
-                                <div class="collection">
-                                    %for dogodek in tabela[vklopljen][2]:
-                                        %if dogodek.tip == "praznik":
-                                            <a class = "modal-trigger collection-item" href="#poglej_dogodek{{dogodek.id}}">{{dogodek.ime}}</a>
-                                        %end
-                                    %end
-                                </div>
-                                <br>
-                                Dogodki:
-                                <div class="collection">
-                                    %for dogodek in tabela[vklopljen][2]:
-                                        %if dogodek.tip == "dogodek":
-                                            <a class = "modal-trigger collection-item" href="#poglej_dogodek{{dogodek.id}}">{{dogodek.ime}}</a>
-                                        %end
-                                    %end
-                                </div>
-                                <a href="#dodaj_dogodek" class = "btn modal-trigger"><i class="material-icons left">add_circle_outline</i>Dodaj dogodek</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+                %include('prikaz_dneva.html', tabela = tabela, vklopljen = vklopljen)
+
             </div>
         </div>
 
-        <div id = "dodaj_dogodek" class="modal">
-            <div class="modal-content">
-                <div class="row">
-                    <form class="col s12" action="/dodaj_dogodek/" method="POST">
-                        <div class="input-field">
-                            <input name="ime_dogodka" type="text" class="validate" id="ime_dogodka">
-                            <label for="ime_dogodka">Ime dogodka</label>
-                        </div>
-
-                        
-                        <div class = "input-field">
-                            <input name = "datumod" type="text" id="datumod" class="datepicker">
-                            <label for = "datumod">Začetek dogodka (pusti prazno za izbrani datum) </label>
-                        </div>
-
-                        
-                        <div class = "input-field">
-                            <input name = "datumdo" type="text" id="datumdo" class="datepicker">
-                            <label for = "datumdo">Konec dogodka (pusti prazno za izbrani datum)</label>
-                        </div>
-
-                        <div class = "input-field">
-                            <textarea name="opis_dogodka" type="text" class="materialize-textarea" id = "opis_dogodka"></textarea>
-                            <label for="opis_dogodka">Opis dogodka</label>
-                        </div>
-
-                        <div class="row">
-                            <button class="btn waves-effect waves-light" type="submit" name="action">Dodaj dogodek</button>
-                        </div>         
-                    </form>       
-                </div>
-            </div>
-        </div>
+        %include('dodaj_dogodek.html')
 
         %for dogodek in tabela[vklopljen][2]:
             <div id = "poglej_dogodek{{dogodek.id}}" class = "modal">
                 <div class = "modal-content">
                     <h4>{{dogodek.ime}}</h4>
-                    <p>{{dogodek.opis}}</p>
+                    <b>Datum dogodka:</b> {{dogodek.datum.dan}}.{{dogodek.datum.mesec}}.{{dogodek.datum.leto}} - {{dogodek.datumdo.dan}}.{{dogodek.datumdo.mesec}}.{{dogodek.datumdo.leto}}
+                    <br>
+                    <b>Opis dogodka:</b>
+                    <p>
+                        {{dogodek.opis}}
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <a href="/izbrisi_dogodek{{dogodek.id}}/" class="modal-close waves-effect waves-red red btn">Izbriši dogodek</a>
                 </div>
             </div>
         %end

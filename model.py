@@ -7,29 +7,32 @@ class Koledar:
     def __init__(self, datum):
         self.datum = datum
         self.dogodki = []
+        self.prazniki = [("novo leto", 1, 1)]
         self.stevilo_dogodkov = 0
-        self.dodaj_praznike()
         self.tabela_datumov = self.naredi_tabelo_datumov()
         self.vklopljen = 0
 
     def dodaj_mesece(self, n):
-        prejsnje_leto = self.datum.leto
         self.datum.dodaj_mesece(n)
-        if not (self.datum.leto == prejsnje_leto):
-            self.dodaj_praznike()
         self.tabela_datumov = self.naredi_tabelo_datumov()
 
     def preklopi(self, i):
         self.vklopljen = i
 
-    def dodaj_dogodek(self, ime, časod, časdo = 0, opis = '', tip = 'dogodek'):
+    def dodaj_dogodek(self, ime, časod, časdo = 0, opis = ''):
         if(časdo == 0):
             časdo = časod
-        while(not časod.je_enak(časdo)):
-                self.dogodki.append(Dogodek(self.stevilo_dogodkov, ime, Datum(časod.dan, časod.mesec, časod.leto), 0, opis, tip))
-                časod.dodaj_dneve(1)
-        self.dogodki.append(Dogodek(self.stevilo_dogodkov, ime, Datum(časod.dan, časod.mesec, časod.leto), 0, opis, tip))
+        self.dogodki.append(Dogodek(self.stevilo_dogodkov, ime, časod, časdo, opis))
         self.stevilo_dogodkov += 1
+        self.tabela_datumov = self.naredi_tabelo_datumov()
+    
+    def izbrisi_dogodek(self, id):
+        n = 0
+        id = int(id)
+        for dogodek in self.dogodki:
+            if(dogodek.id == id):
+                self.dogodki.pop(n)
+            n += 1
         self.tabela_datumov = self.naredi_tabelo_datumov()
 
     def naredi_tabelo_datumov(self):
@@ -41,16 +44,21 @@ class Koledar:
         zacetek_koledarja.dodaj_dneve(-(zacetek_meseca - 1))
         for i in range(1, 43):
             if i < zacetek_meseca or i > konec_meseca:
-                tabela.append((Datum(zacetek_koledarja.dan, zacetek_koledarja.mesec, zacetek_koledarja.leto), "grey", self.naredi_tabelo_dogodkov(zacetek_koledarja)))
+                tabela.append((Datum(zacetek_koledarja.dan, zacetek_koledarja.mesec, zacetek_koledarja.leto), "grey", self.naredi_tabelo_dogodkov(zacetek_koledarja), self.naredi_tabelo_zanimivosti(zacetek_koledarja)))
             else:
-                tabela.append((Datum(zacetek_koledarja.dan, zacetek_koledarja.mesec, zacetek_koledarja.leto), "black", self.naredi_tabelo_dogodkov(zacetek_koledarja)))
+                tabela.append((Datum(zacetek_koledarja.dan, zacetek_koledarja.mesec, zacetek_koledarja.leto), "black", self.naredi_tabelo_dogodkov(zacetek_koledarja), self.naredi_tabelo_zanimivosti(zacetek_koledarja)))
             zacetek_koledarja.dodaj_dneve(1)
         return tabela
     
     def naredi_tabelo_dogodkov(self, dan):
         tab = []
         for dogodek in self.dogodki:
-            if dogodek.datum.je_enak(dan):
+            datumod = Datum(dogodek.datum.dan, dogodek.datum.mesec, dogodek.datum.leto )
+            while( not datumod.je_enak(dogodek.datumdo)):
+                if datumod.je_enak(dan):
+                    tab.append(dogodek)
+                datumod.dodaj_dneve(1)
+            if datumod.je_enak(dan):
                 tab.append(dogodek)
         return tab
 
@@ -68,10 +76,15 @@ class Koledar:
             leto = int(oblikovan[2])
             return Datum(dan, mesec, leto)
     
-    def dodaj_praznike(self):
-        prazniki = [("novo leto", 1, 1)]
-        for praznik in prazniki:
-            self.dodaj_dogodek(praznik[0], Datum(praznik[1], praznik[2], self.datum.leto), 0, '', "praznik")
+    def naredi_tabelo_zanimivosti(self, dan):
+        tab = []
+        zdaj = Datum(int(datetime.datetime.now().strftime("%d")), int(datetime.datetime.now().strftime("%m")), int(datetime.datetime.now().strftime("%Y")))
+        if dan.je_enak(zdaj):
+            tab.append(("Današnji dan", zdaj))
+        for praznik in self.prazniki:
+            if(dan.dan == praznik[1] and dan.mesec == praznik[2]):
+                tab.append((praznik[0], Datum(praznik[1], praznik[2], dan.leto)))
+        return tab
 
 
 class Datum:
@@ -112,7 +125,6 @@ class Datum:
         self.leto = int(self.datum.strftime("%Y"))
     
 
-
 class Uporabnik:
 
     def __init__(self, username):
@@ -122,10 +134,9 @@ class Uporabnik:
 
 class Dogodek:
 
-    def __init__(self, id, ime, datumod, datumdo = 0, opis = '', tip = 'dogodek'):
+    def __init__(self, id, ime, datumod, datumdo = 0, opis = ''):
         self.id = id
         self.ime = ime
-        self.tip = tip
         self.datum = datumod
         self.opis = opis
         if(datumdo == 0):

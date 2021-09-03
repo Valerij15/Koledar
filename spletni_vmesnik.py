@@ -32,4 +32,9 @@ def dodaj_dogodek():
     model.poskus.koledar.dodaj_dogodek(ime, model.poskus.koledar.oblikuj_datum(datumod),model.poskus.koledar.oblikuj_datum(datumdo), opis)
     bottle.redirect("/")
 
+@bottle.get('/izbrisi_dogodek<i>/')
+def izbrisi_dogodek(i):
+    model.poskus.koledar.izbrisi_dogodek(i)
+    bottle.redirect("/")
+
 bottle.run()

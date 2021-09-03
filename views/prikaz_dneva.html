@@ -3,20 +3,22 @@
         <div class="card" style = "width:350px;">
             <div class="card-content" style="font-size: 20px;">
                 <span class="card-title">{{tabela[vklopljen][0].dan}}. {{tabela[vklopljen][0].ime_meseca()}} {{tabela[vklopljen][0].leto}} </span>
-                Zanimivosti:
+                Prazniki:
+                <div class="collection">
+                    %for zanimivost in tabela[vklopljen][3]:
+                        <a href="#">{{zanimivost[0]}}</a>
+                    %end
+                </div>
                 <br>
                 Dogodki:
-                <ul>
-                %for dogodek in tabela[vklopljen][2]:
-                    <li>{{dogodek[1]}}</li>
-                %end
-                </ul>
-                <a href="#dodaj_dogodek" class = "btn modal-trigger" data-target="modal1"><i class="material-icons left">add_circle_outline</i>Dodaj dogodek</a>
+                <div class="collection">
+                    %for dogodek in tabela[vklopljen][2]:
+                        <a class = "modal-trigger collection-item" href="#poglej_dogodek{{dogodek.id}}">{{dogodek.ime}}</a>
+                    %end
+                </div>
+                <a href="#dodaj_dogodek" class = "btn modal-trigger"><i class="material-icons left">add_circle_outline</i>Dodaj dogodek</a>
             </div>
         </div>
     </div>
 </div>
 
-<div class = "modal" id = "dodaj_dogodek">
-    test
-</div>

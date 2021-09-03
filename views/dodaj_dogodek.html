@@ -1,0 +1,33 @@
+<div id = "dodaj_dogodek" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <form class="col s12" action="/dodaj_dogodek/" method="POST">
+                <div class="input-field">
+                    <input name="ime_dogodka" type="text" class="validate" id="ime_dogodka">
+                    <label for="ime_dogodka">Ime dogodka</label>
+                </div>
+
+                
+                <div class = "input-field">
+                    <input name = "datumod" type="text" id="datumod" class="datepicker">
+                    <label for = "datumod">Začetek dogodka (pusti prazno za izbrani datum) </label>
+                </div>
+
+                
+                <div class = "input-field">
+                    <input name = "datumdo" type="text" id="datumdo" class="datepicker">
+                    <label for = "datumdo">Konec dogodka (pusti prazno za izbrani datum)</label>
+                </div>
+
+                <div class = "input-field">
+                    <textarea name="opis_dogodka" type="text" class="materialize-textarea" id = "opis_dogodka"></textarea>
+                    <label for="opis_dogodka">Opis dogodka</label>
+                </div>
+
+                <div class="row">
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Dodaj dogodek</button>
+                </div>         
+            </form>       
+        </div>
+    </div>
+</div>
