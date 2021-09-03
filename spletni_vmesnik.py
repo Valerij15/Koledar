@@ -1,6 +1,8 @@
 import bottle
 import model
 
+PRIJAVA = "prijavljen"
+SKRIVNOST = "adkdjnsnkfsdjd"
 
 @bottle.route('/')
 def osnovna_stran():
@@ -36,5 +38,22 @@ def dodaj_dogodek():
 def izbrisi_dogodek(i):
     model.poskus.koledar.izbrisi_dogodek(i)
     bottle.redirect("/")
+
+@bottle.get('/prijava/')
+def prijava_get():
+    return bottle.template("prijava.html")
+
+@bottle.post('/prijava/')
+def prijava_post():
+    ime = bottle.request.forms.getunicode('uporabnisko_ime')
+    geslo = bottle.request.forms.getunicode('geslo')
+    if(geslo == "geslo"):
+        bottle.response.set_cookie(PRIJAVA, "prijavljen", path ="/", secret = SKRIVNOST)
+        bottle.redirect("/")
+
+def preveri_prijavo():
+    prijavljen = bottle.response.get_cookie(PRIJAVA, "prijavljen", secret = SKRIVNOST)
+    if(prijavljen != "prijavljen"):
+        bottle.redirect("/prijava/")
 
 bottle.run()
