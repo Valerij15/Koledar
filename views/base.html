@@ -51,9 +51,16 @@
         <nav class= "nav-wraper indigo">
             <ul>
                 <li><a href ="#">Home</a></li>
-                <li><form action="/odjava/" method="post"><button type="submit" class ="btn">Odjava</button></form>
-                </li>
+            % if uporabnik:
+                <li><b>Pozdravljen {{uporabnik}}!</b></li>
+            %end
             </ul>
+            <ul class = "right">
+            % if uporabnik:  
+                <ul class = "right">
+                    <li><form action="/odjava/" method="post"><button type="submit" class ="btn red white-text" style="margin-left: 20px; margin-right: 20px;" >Odjava</button></form></li>
+                </ul>
+            %end
         </nav>
 
         {{!base}}

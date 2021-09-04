@@ -8,7 +8,7 @@ aktivni_uporabniki = []
 @bottle.route('/')
 def osnovna_stran():
     uporabnik = preveri_prijavo()
-    return bottle.template("osnovna_stran.html", mesec= uporabnik.datum.ime_meseca(), leto = uporabnik.datum.leto, tabela = uporabnik.koledar.tabela_datumov, vklopljen = uporabnik.koledar.vklopljen)
+    return bottle.template("osnovna_stran.html", mesec = uporabnik.datum.ime_meseca(), leto = uporabnik.datum.leto, tabela = uporabnik.koledar.tabela_datumov, vklopljen = uporabnik.koledar.vklopljen, uporabnik = uporabnik.uporabnisko_ime)
 
 @bottle.get('/naslednji_mesec/')
 def naslednji_mesec():
@@ -40,7 +40,7 @@ def dodaj_dogodek():
     uporabnik.koledar.dodaj_dogodek(ime, datumod, datumdo, opis)
     bottle.redirect("/")
 
-@bottle.get('/izbrisi_dogodek<i>/')
+@bottle.post('/izbrisi_dogodek<i>/')
 def izbrisi_dogodek(i):
     uporabnik = preveri_prijavo()
     uporabnik.koledar.izbrisi_dogodek(i)
@@ -48,38 +48,38 @@ def izbrisi_dogodek(i):
 
 @bottle.get('/prijava/')
 def prijava_get():
-    return bottle.template("prijava.html", napaka = None)
+    return bottle.template("prijava.html", napaka = None, uporabnik = None)
 
 @bottle.post('/prijava/')
 def prijava_post():
     uporabnisko_ime = bottle.request.forms.getunicode('uporabnisko_ime')
     geslo = bottle.request.forms.getunicode('geslo')
     if not uporabnisko_ime:
-        return bottle.template("registracija.html", napaka="Vnesi uporabniško ime!")
+        return bottle.template("registracija.html", napaka="Vnesi uporabniško ime!", uporabnik = None)
     try:
         model.Uporabnik.prijava(uporabnisko_ime, geslo)
         bottle.response.set_cookie(PRIJAVA, uporabnisko_ime, path="/", secret=SKRIVNOST)
         bottle.redirect("/")
     except ValueError as e:
-        return bottle.template("prijava.html", napaka=e.args[0])
+        return bottle.template("prijava.html", napaka=e.args[0], uporabnik = None)
 
 
 @bottle.get("/registracija/")
 def registracija_get():
-    return bottle.template("registracija.html", napaka = None)
+    return bottle.template("registracija.html", napaka = None, uporabnik = None)
 
 @bottle.post("/registracija/")
 def registracija_post():
     uporabnisko_ime = bottle.request.forms.getunicode("uporabnisko_ime")
     geslo = bottle.request.forms.getunicode("geslo")
     if not uporabnisko_ime:
-        return bottle.template("registracija.html", napaka="Vnesi uporabniško ime!")
+        return bottle.template("registracija.html", napaka="Vnesi uporabniško ime!", uporabnik = None)
     try:
         model.Uporabnik.registracija(uporabnisko_ime, geslo)
         bottle.response.set_cookie(PRIJAVA, uporabnisko_ime, path="/", secret=SKRIVNOST)
         bottle.redirect("/")
     except ValueError as e:
-        return bottle.template("registracija.html", napaka = e.args[0])
+        return bottle.template("registracija.html", napaka = e.args[0], uporabnik = None)
 
 def preveri_prijavo():
     uporabnisko_ime = bottle.request.get_cookie(PRIJAVA,  secret = SKRIVNOST)
@@ -87,15 +87,24 @@ def preveri_prijavo():
         for uporabnik in aktivni_uporabniki:
             if uporabnik.uporabnisko_ime == uporabnisko_ime:
                 return uporabnik
-        uporabnik = model.Uporabnik.vrniUporabnika(uporabnisko_ime)
-        aktivni_uporabniki.append(uporabnik)
-        return uporabnik
+        try:
+            uporabnik = model.Uporabnik.vrniUporabnika(uporabnisko_ime)
+            aktivni_uporabniki.append(uporabnik)
+            return uporabnik
+        except ValueError as e:
+            bottle.redirect("/prijava/")
     else:
         bottle.redirect("/prijava/")
 
 @bottle.post("/odjava/")
 def odjava():
+    uporabnisko_ime = bottle.request.get_cookie(PRIJAVA,  secret = SKRIVNOST)
+    n = 0
+    for uporabnik in aktivni_uporabniki:
+        if uporabnik.uporabnisko_ime == uporabnisko_ime:
+            aktivni_uporabniki.pop(n)
+        n += 1
     bottle.response.delete_cookie(PRIJAVA, path="/")
-    bottle.redirect("/")    
+    bottle.redirect("/")   
 
 bottle.run()

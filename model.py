@@ -22,6 +22,7 @@ class Koledar:
         self.datum = datum
         self.ime_uporabnika = ime_uporabnika
         self.dogodki = []
+        self.preberi_dogodke()
         self.prazniki = [("novo leto", 1, 1, "opis")]
         self.stevilo_dogodkov = 0
         self.tabela_datumov = self.naredi_tabelo_datumov()
@@ -40,7 +41,7 @@ class Koledar:
         tab = b.fetchall()
         b.close()
         for dogodek in tab:
-            self.dogodki.append(Dogodek(tab[0], tab[1], Datum.spremeni_v_datum(tab[2]), Datum.spremeni_v_datum(tab[3]), tab[4]))
+            self.dogodki.append(Dogodek(dogodek[0], dogodek[1], Datum.spremeni_v_datum(dogodek[2]), Datum.spremeni_v_datum(dogodek[3]), dogodek[4]))
 
     def dodaj_dogodek(self, ime, časod, časdo = 0, opis = ''):
         b = base.cursor()
@@ -54,6 +55,10 @@ class Koledar:
         self.tabela_datumov = self.naredi_tabelo_datumov()
     
     def izbrisi_dogodek(self, id):
+        b = base.cursor()
+        b.execute('DELETE FROM dogodki where ime_uporabnika =? AND id =?', (self.ime_uporabnika, id))
+        base.commit()
+        b.close()
         n = 0
         id = int(id)
         for dogodek in self.dogodki:
@@ -163,7 +168,7 @@ class Datum:
     @staticmethod
     def spremeni_v_datum(datum):
         tab = datum.split("/")
-        return Datum(tab[0], tab[1], tab[2])
+        return Datum(int(tab[0]), int(tab[1]), int(tab[2]))
     
 
 class Uporabnik:
@@ -205,7 +210,7 @@ class Uporabnik:
         tab = b.fetchall()
         b.close()
         if(len(tab) == 0):
-            return None
+            raise ValueError("Uporabnik ne obstaja!")
         else:
             return Uporabnik(tab[0][0], tab[0][1])
 
