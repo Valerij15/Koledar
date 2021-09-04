@@ -3,7 +3,7 @@
 <br>
 <br>
 <div class="container center"> 
-    <form class="col s12" action="/prijava/" method="POST">
+    <form class="col s12" action="/registracija/" method="POST">
         <div class="input-field">
             <input name="uporabnisko_ime" type="text" class="validate" id="uporabnisko_ime">
             <label for="uporabnisko_ime" class = "active">Uporabniško ime</label>
@@ -16,10 +16,7 @@
             <p class="help is-danger red-text" >{{ napaka }}</p>
         % end
         <div class = "row">                
-            <button class="btn waves-effect waves-light" type="submit" name="action">Prijavi se</button>
+            <button class="btn waves-effect waves-light" type="submit" name="action">Registriraj se</button>
         </div>
     </form>
-</div>
-<div class = "container center">
-    <a href ="/registracija/" class="btn waves-effect waves-light" >Registracija</button>
 </div>

@@ -51,6 +51,8 @@
         <nav class= "nav-wraper indigo">
             <ul>
                 <li><a href ="#">Home</a></li>
+                <li><form action="/odjava/" method="post"><button type="submit" class ="btn">Odjava</button></form>
+                </li>
             </ul>
         </nav>
 
@@ -62,6 +64,9 @@
     $(document).ready(function(){
         $('.modal').modal();
         $('.datepicker').datepicker()({
+        
         });
-    });
+        $('.input-field label').addClass('active');
+        setTimeout(function(){ $('.input-field label').addClass('active'); }, 1);
+        });
 </script>

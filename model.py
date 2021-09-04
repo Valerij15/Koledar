@@ -1,11 +1,26 @@
 import datetime
 from calendar import monthrange
+from re import U
 from dateutil.relativedelta import relativedelta
+import sqlite3
+import os.path
+
+
+if(os.path.isfile('database.db')):
+    base = sqlite3.connect('database.db')
+else:
+    base = sqlite3.connect('database.db')
+    b = base.cursor()
+    b.execute('CREATE TABLE uporabniki (uporabnisko_ime text, geslo text)')
+    b.execute('CREATE TABLE dogodki (id integer, ime text, datumod text, datumdo text, opis, ime_uporabnika text)')
+    base.commit()
+    b.close()
 
 class Koledar:
 
-    def __init__(self, datum):
+    def __init__(self, datum, ime_uporabnika):
         self.datum = datum
+        self.ime_uporabnika = ime_uporabnika
         self.dogodki = []
         self.prazniki = [("novo leto", 1, 1, "opis")]
         self.stevilo_dogodkov = 0
@@ -19,10 +34,21 @@ class Koledar:
     def preklopi(self, i):
         self.vklopljen = i
 
+    def preberi_dogodke(self):
+        b = base.cursor()
+        b.execute('SELECT * FROM dogodki where ime_uporabnika =?', (self.ime_uporabnika,))
+        tab = b.fetchall()
+        b.close()
+        for dogodek in tab:
+            self.dogodki.append(Dogodek(tab[0], tab[1], Datum.spremeni_v_datum(tab[2]), Datum.spremeni_v_datum(tab[3]), tab[4]))
+
     def dodaj_dogodek(self, ime, časod, časdo = 0, opis = ''):
+        b = base.cursor()
         if(časdo == 0 or časod.je_vecji_od(časdo)):
             časdo = časod
-
+        b.execute('INSERT INTO dogodki (id, ime, datumod, datumdo, opis, ime_uporabnika) VALUES (?, ?, ?, ?, ?, ?)', (self.stevilo_dogodkov, ime, časod.oblika_za_bazo(), časdo.oblika_za_bazo(), opis, self.ime_uporabnika))
+        base.commit()
+        b.close()
         self.dogodki.append(Dogodek(self.stevilo_dogodkov, ime, časod, časdo, opis))
         self.stevilo_dogodkov += 1
         self.tabela_datumov = self.naredi_tabelo_datumov()
@@ -93,7 +119,7 @@ class Koledar:
 
 class Datum:
 
-    def __init__(self, dan, mesec, leto):
+    def __init__(self, dan = int(datetime.datetime.today().strftime("%d")), mesec = int(datetime.datetime.today().strftime("%m")), leto = int(datetime.datetime.today().strftime("%Y"))):
         self.datum = datetime.datetime(leto, mesec, dan)
         self.dan = dan
         self.mesec = mesec
@@ -130,14 +156,60 @@ class Datum:
         self.dan = int(self.datum.strftime("%d"))
         self.mesec = int(self.datum.strftime("%m"))
         self.leto = int(self.datum.strftime("%Y"))
+
+    def  oblika_za_bazo(self):
+        return str(self.dan) +"/" + str(self.mesec) + "/"  + str(self.leto)
+    
+    @staticmethod
+    def spremeni_v_datum(datum):
+        tab = datum.split("/")
+        return Datum(tab[0], tab[1], tab[2])
     
 
 class Uporabnik:
 
-    def __init__(self, username):
-        self.username = username
-        self.datum = Datum(int(datetime.datetime.today().strftime("%d")), int(datetime.datetime.today().strftime("%m")), int(datetime.datetime.today().strftime("%Y")))
-        self.koledar = Koledar(self.datum)
+    def __init__(self, uporabnisko_ime, geslo):
+        self.uporabnisko_ime = uporabnisko_ime
+        self.geslo = geslo
+        self.datum = Datum()
+        self.koledar = Koledar(self.datum, self.uporabnisko_ime)
+
+    @staticmethod
+    def registracija(uporabnisko_ime, geslo):
+        b = base.cursor()
+        b.execute('SELECT * FROM uporabniki WHERE uporabnisko_ime =?', (uporabnisko_ime,) )
+        if(len(b.fetchall()) == 0):
+            b.execute('INSERT INTO uporabniki (uporabnisko_ime, geslo) VALUES (?, ?)', (uporabnisko_ime, geslo))
+            base.commit()
+            b.close()
+            return Uporabnik(uporabnisko_ime, geslo)
+        else:
+            b.close()
+            raise ValueError("Uporabniško ime že obstaja!")
+
+    @staticmethod
+    def prijava(uporabnisko_ime, geslo):
+        uporabnik = Uporabnik.vrniUporabnika(uporabnisko_ime)
+        if uporabnik:
+            if uporabnik.geslo != geslo:
+                raise ValueError("Geslo je napačno!")
+            else:
+                return Uporabnik(uporabnisko_ime, geslo)
+        else:
+            raise ValueError("Uporabniško ime ne obstaja!")
+    
+    @staticmethod
+    def vrniUporabnika(uporabnisko_ime):
+        b = base.cursor()
+        b.execute('SELECT * FROM uporabniki WHERE uporabnisko_ime =?', (uporabnisko_ime,) )
+        tab = b.fetchall()
+        b.close()
+        if(len(tab) == 0):
+            return None
+        else:
+            return Uporabnik(tab[0][0], tab[0][1])
+
+        
 
 class Dogodek:
 
@@ -151,7 +223,6 @@ class Dogodek:
         else:
             self.datumdo = datumdo
 
-poskus = Uporabnik("Valerij")
 
 
 
