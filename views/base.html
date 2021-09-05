@@ -48,28 +48,32 @@
 
 </head>
 <body>
-        <nav class= "nav-wraper indigo">
-            <ul>
-            % if uporabnik:
-                %if stran == "osnovna_stran":
-                    <li class = "active"><a href="/">Domača stran</a></li>
-                    <li><a href="/dogodki/">Dogodki</a></li>
-                %else:
-                    <li><a href="/">Domača stran</a></li>
-                    <li class = "active"><a href="/dogodki/" class = "active">Dogodki</a></li>
-                %end
-                <li><b>Pozdravljen {{uporabnik}}!</b></li>
-            %end
-            </ul>
-            <ul class = "right">
-            % if uporabnik:  
-                <ul class = "right">
-                    <li><form action="/odjava/" method="post"><button type="submit" class ="btn red white-text" style="margin-left: 20px; margin-right: 20px;" >Odjava</button></form></li>
-                </ul>
-            %end
-        </nav>
+    <nav class= "nav-wraper indigo"> <!-- navigation bar -->
+        <ul>
+        % if uporabnik:
 
-        {{!base}}
+            % if stran == "osnovna_stran":
+                <li class = "active"><a href="/">Domača stran</a></li>
+                <li><a href="/dogodki/">Dogodki</a></li>
+            % else:
+                <li><a href="/">Domača stran</a></li>
+                <li class = "active"><a href="/dogodki/" class = "active">Dogodki</a></li>
+            % end
+
+            <li><span style="margin-left: 30px;"><b>Pozdravljen {{uporabnik}}!</b></span></li>
+
+        % end
+        </ul>
+
+        % if uporabnik:  
+            <ul class = "right">
+                <li><form action="/odjava/" method="post"><button type="submit" class ="btn red white-text" style="margin-left: 20px; margin-right: 20px;" >Odjava</button></form></li>
+            </ul>
+        % end
+    </nav>
+
+    {{!base}}
+
 </body>
 
 

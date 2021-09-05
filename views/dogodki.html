@@ -1,48 +1,61 @@
 %rebase('base.html')
 
-<div class = "container center" style="width:40%">
+<div class = "container center" style="width:40%"> <!-- Stran s vsemi dogodki ter časom do njih. -->
     <div class="collection">
-        %if len(tab) == 0:
+
+        % if len(tab) == 0:
             Nimate še nobenih dogodkov.
-        %end
+        % end
         % for dogodek in tab:
             <a href="#preglej_dogodek{{dogodek[5]}}" class="modal-trigger collection-item" style="text-align:left">
                 {{dogodek[0]}}
                 % if  dogodek[4] == "danes":
                     <span class="red-text badge">Danes</span>
-                %elif  dogodek[4] == 1:
+                % elif  dogodek[4] == 1:
                     <span class="red-text badge">Še {{dogodek[4]}} dan.</span>
-                %else:
+                % else:
                     <span class="red-text badge">Še {{dogodek[4]}} dni.</span>
-                %end
+                % end
             </a>
-        %end
+        % end
+
     </div>
     <a href="#dodaj_dogodek" class = "btn modal-trigger"><i class="material-icons left">add_circle_outline</i>Dodaj dogodek</a>
+    
+    % if napaka:
+        <p class="help is-danger red-text" >{{ napaka }}</p>
+    % end
+
 </div>
 
 
-%for dogodek in tab:
-        <div id = "preglej_dogodek{{dogodek[5]}}" class = "modal">
-            <div class = "modal-content">
-                <h4>{{dogodek[0]}}</h4>
-                <b>Datum dogodka:</b> {{dogodek[1].dan}}.{{dogodek[1].mesec}}.{{dogodek[1].leto}} - {{dogodek[2].dan}}.{{dogodek[2].mesec}}.{{dogodek[2].leto}}
-                <br>
-                <b>Opis dogodka:</b>
-                <p>
-                    {{dogodek[3]}}
-                </p>
-            </div>
-            <div class="modal-footer">
-                <form action="/dogodki_izbrisi_dogodek{{dogodek[5]}}/" method="post"><button type="submit" class ="btn red white-text">Izbriši dogodek</button></form>
-            </div>
+% for dogodek in tab:
+
+    <div id = "preglej_dogodek{{dogodek[5]}}" class = "modal">
+
+        <div class = "modal-content">
+            <h4>{{dogodek[0]}}</h4>
+            <b>Datum dogodka:</b> {{dogodek[1].dan}}.{{dogodek[1].mesec}}.{{dogodek[1].leto}} - {{dogodek[2].dan}}.{{dogodek[2].mesec}}.{{dogodek[2].leto}}
+            <br>
+            <b>Opis dogodka:</b>
+            <p>
+                {{dogodek[3]}}
+            </p>
         </div>
-%end
+
+        <div class="modal-footer">
+            <form action="/dogodki_izbrisi_dogodek{{dogodek[5]}}/" method="post"><button type="submit" class ="btn red white-text">Izbriši dogodek</button></form>
+        </div>
+
+    </div>
+% end
 
 <div id = "dodaj_dogodek" class="modal">
+
     <div class="modal-content">
         <div class="row">
             <form class="col s12" action="/dogodki_dodaj_dogodek/" method="POST">
+
                 <div class="input-field">
                     <input name="ime_dogodka" type="text" class="validate" id="ime_dogodka">
                     <label for="ime_dogodka">Ime dogodka</label>
@@ -67,7 +80,8 @@
 
                 <div class="row">
                     <button class="btn waves-effect waves-light" type="submit" name="action">Dodaj dogodek</button>
-                </div>         
+                </div>
+
             </form>       
         </div>
     </div>

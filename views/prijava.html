@@ -2,25 +2,31 @@
 <br>
 <br>
 <br>
-<div class="container center">
+<div class="container center">  <!-- Stran za prijavo -->
     <h4 class ="red-text">PRIJAVA</h4>
     <form class="col s12" action="/prijava/" method="POST">
+
         <div class="input-field">
             <input name="uporabnisko_ime" type="text" class="validate" id="uporabnisko_ime">
             <label for="uporabnisko_ime">Uporabniško ime</label>
         </div>
+
         <div class="input-field">
             <input name="geslo" type="password" class="validate" id="geslo">
             <label for="geslo">Geslo</label>
         </div>
+
         % if napaka:
             <p class="help is-danger red-text" >{{ napaka }}</p>
         % end
+
         <div class = "row">                
             <button class="btn waves-effect waves-light" type="submit" name="action">Prijavi se</button>
         </div>
+
     </form>
 </div>
+
 <div class = "container center">
     <a href ="/registracija/" class="btn waves-effect waves-light" >Registracija</a>
 </div>
