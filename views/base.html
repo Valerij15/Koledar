@@ -50,8 +50,14 @@
 <body>
         <nav class= "nav-wraper indigo">
             <ul>
-                <li><a href ="#">Home</a></li>
             % if uporabnik:
+                %if stran == "osnovna_stran":
+                    <li class = "active"><a href="/">Domača stran</a></li>
+                    <li><a href="/dogodki/">Dogodki</a></li>
+                %else:
+                    <li><a href="/">Domača stran</a></li>
+                    <li class = "active"><a href="/dogodki/" class = "active">Dogodki</a></li>
+                %end
                 <li><b>Pozdravljen {{uporabnik}}!</b></li>
             %end
             </ul>
@@ -67,13 +73,12 @@
 </body>
 
 
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <script>
     $(document).ready(function(){
         $('.modal').modal();
-        $('.datepicker').datepicker()({
-        
-        });
-        $('.input-field label').addClass('active');
-        setTimeout(function(){ $('.input-field label').addClass('active'); }, 1);
-        });
+        $('.datepicker').datepicker()({});
+        $('.collapsible').collapsible();
+    });
 </script>

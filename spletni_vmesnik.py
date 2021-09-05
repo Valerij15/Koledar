@@ -8,7 +8,12 @@ aktivni_uporabniki = []
 @bottle.route('/')
 def osnovna_stran():
     uporabnik = preveri_prijavo()
-    return bottle.template("osnovna_stran.html", mesec = uporabnik.datum.ime_meseca(), leto = uporabnik.datum.leto, tabela = uporabnik.koledar.tabela_datumov, vklopljen = uporabnik.koledar.vklopljen, uporabnik = uporabnik.uporabnisko_ime)
+    return bottle.template("osnovna_stran.html", mesec = uporabnik.datum.ime_meseca(), leto = uporabnik.datum.leto, tabela = uporabnik.koledar.tabela_datumov, vklopljen = uporabnik.koledar.vklopljen, uporabnik = uporabnik.uporabnisko_ime, stran = "osnovna_stran")
+
+@bottle.get('/dogodki/')
+def na_dogodke():
+    uporabnik = preveri_prijavo()
+    return bottle.template('dogodki.html', tab = uporabnik.koledar.naredi_urejeno_tabelo(), uporabnik = uporabnik.uporabnisko_ime, stran = "dogodki")
 
 @bottle.get('/naslednji_mesec/')
 def naslednji_mesec():
@@ -46,6 +51,12 @@ def izbrisi_dogodek(i):
     uporabnik.koledar.izbrisi_dogodek(i)
     bottle.redirect("/")
 
+@bottle.post('/dogodki_izbrisi_dogodek<i>/')
+def izbrisi_dogodek(i):
+    uporabnik = preveri_prijavo()
+    uporabnik.koledar.izbrisi_dogodek(i)
+    bottle.redirect("/dogodki/")
+
 @bottle.get('/prijava/')
 def prijava_get():
     return bottle.template("prijava.html", napaka = None, uporabnik = None)
@@ -55,7 +66,7 @@ def prijava_post():
     uporabnisko_ime = bottle.request.forms.getunicode('uporabnisko_ime')
     geslo = bottle.request.forms.getunicode('geslo')
     if not uporabnisko_ime:
-        return bottle.template("registracija.html", napaka="Vnesi uporabniško ime!", uporabnik = None)
+        return bottle.template("registracija.html", napaka="Vnesi uporabniško ime!", uporabnik = None, stran = "prijava")
     try:
         model.Uporabnik.prijava(uporabnisko_ime, geslo)
         bottle.response.set_cookie(PRIJAVA, uporabnisko_ime, path="/", secret=SKRIVNOST)
@@ -73,7 +84,7 @@ def registracija_post():
     uporabnisko_ime = bottle.request.forms.getunicode("uporabnisko_ime")
     geslo = bottle.request.forms.getunicode("geslo")
     if not uporabnisko_ime:
-        return bottle.template("registracija.html", napaka="Vnesi uporabniško ime!", uporabnik = None)
+        return bottle.template("registracija.html", napaka="Vnesi uporabniško ime!", uporabnik = None, stran = "registracija")
     try:
         model.Uporabnik.registracija(uporabnisko_ime, geslo)
         bottle.response.set_cookie(PRIJAVA, uporabnisko_ime, path="/", secret=SKRIVNOST)

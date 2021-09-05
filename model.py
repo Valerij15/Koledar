@@ -22,9 +22,11 @@ class Koledar:
         self.datum = datum
         self.ime_uporabnika = ime_uporabnika
         self.dogodki = []
-        self.preberi_dogodke()
-        self.prazniki = [("novo leto", 1, 1, "opis")]
         self.stevilo_dogodkov = 0
+        self.preberi_dogodke()
+        self.prazniki = [("novo leto", 1, 1, "opis"), ("novo leto", 1, 2, "opis"), ("Prešernov dan", 8, 2, "opis"), ("dan upora proti okupatorju", 27, 4, "opis"), ("praznik dela", 1, 5, "opis"),
+        ("dan Primoža Trubarja", 8, 6, "opis"), ("dan državnosti", 25, 6, "opis"), ("združitev prekmurskih Slovencev z matičnim narodom", 17, 8, "opis"), ("vrnitev Primorske k matični domovini", 15, 9, "opis"), ("dan slovenskega športa", 23, 9, "opis"),
+        ("dan suverenosti", 25, 10, "opis"), ("dan spomina na mrtve", 1, 11, "opis"), ("dan Rudolfa Maistra", 23, 11, "opis"), ("dan samostojnosti in enotnosti", 26, 12, "opis"), ("Marijino vnebovzetje", 15, 8, "opis"), ("dan reformacije", 31, 10, "opis"),("božič", 25, 12, "opis")]
         self.tabela_datumov = self.naredi_tabelo_datumov()
         self.vklopljen = 0
 
@@ -41,6 +43,7 @@ class Koledar:
         tab = b.fetchall()
         b.close()
         for dogodek in tab:
+            self.stevilo_dogodkov += 1
             self.dogodki.append(Dogodek(dogodek[0], dogodek[1], Datum.spremeni_v_datum(dogodek[2]), Datum.spremeni_v_datum(dogodek[3]), dogodek[4]))
 
     def dodaj_dogodek(self, ime, časod, časdo = 0, opis = ''):
@@ -120,6 +123,27 @@ class Koledar:
                 tab.append((id, praznik[0], Datum(praznik[1], praznik[2], dan.leto), praznik[3]))
                 id += 1
         return tab
+    
+    def naredi_urejeno_tabelo(self):
+        tab = []
+        danes = Datum()
+        n = 0
+        for dogodek in self.dogodki:
+            if(dogodek.datum.je_vecji_od(danes)):
+                if len(tab) == 0:
+                    tab.append((dogodek.ime, dogodek.datum, dogodek.datumdo, dogodek.opis, dogodek.datum.časdo(), dogodek.id))
+                else:
+                    while(n < len(tab)):
+                        if tab[n][1].je_vecji_od(dogodek.datum):
+                            tab.insert(n, (dogodek.ime, dogodek.datum, dogodek.datumdo, dogodek.opis, dogodek.datum.časdo(), dogodek.id))
+                            n = len(tab)
+                        n += 1
+                    if(n == len(tab)):
+                        tab.append((dogodek.ime, dogodek.datum, dogodek.datumdo, dogodek.opis, dogodek.datum.časdo(), dogodek.id))
+            elif(dogodek.datum.je_enak(danes)):
+                tab.insert(0, (dogodek.ime, dogodek.datum, dogodek.datumdo, dogodek.opis, "danes", dogodek.id))
+        return tab
+
 
 
 class Datum:
@@ -164,7 +188,12 @@ class Datum:
 
     def  oblika_za_bazo(self):
         return str(self.dan) +"/" + str(self.mesec) + "/"  + str(self.leto)
-    
+
+    def časdo(self):
+        danes = datetime.datetime.today()
+        razlika = self.datum - danes
+        return razlika.days
+
     @staticmethod
     def spremeni_v_datum(datum):
         tab = datum.split("/")

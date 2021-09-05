@@ -6,11 +6,11 @@
     <form class="col s12" action="/prijava/" method="POST">
         <div class="input-field">
             <input name="uporabnisko_ime" type="text" class="validate" id="uporabnisko_ime">
-            <label for="uporabnisko_ime" class = "active">Uporabniško ime</label>
+            <label for="uporabnisko_ime">Uporabniško ime</label>
         </div>
         <div class="input-field">
             <input name="geslo" type="password" class="validate" id="geslo">
-            <label for="geslo" class = "active">Geslo</label>
+            <label for="geslo">Geslo</label>
         </div>
         % if napaka:
             <p class="help is-danger red-text" >{{ napaka }}</p>
@@ -21,5 +21,5 @@
     </form>
 </div>
 <div class = "container center">
-    <a href ="/registracija/" class="btn waves-effect waves-light" >Registracija</button>
+    <a href ="/registracija/" class="btn waves-effect waves-light" >Registracija</a>
 </div>
