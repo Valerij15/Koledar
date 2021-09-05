@@ -192,7 +192,7 @@ class Datum:
     def časdo(self):
         danes = datetime.datetime.today()
         razlika = self.datum - danes
-        return razlika.days
+        return razlika.days + 1
 
     @staticmethod
     def spremeni_v_datum(datum):

@@ -6,7 +6,7 @@
             Nimate še nobenih dogodkov.
         %end
         % for dogodek in tab:
-            <a href="#preglej_dogodek{{tab.index(dogodek)}}" class="modal-trigger collection-item" style="text-align:left">
+            <a href="#preglej_dogodek{{dogodek[5]}}" class="modal-trigger collection-item" style="text-align:left">
                 {{dogodek[0]}}
                 % if  dogodek[4] == "danes":
                     <span class="red-text badge">Danes</span>
@@ -22,7 +22,7 @@
 
 
 %for dogodek in tab:
-        <div id = "preglej_dogodek{{tab.index(dogodek)}}" class = "modal">
+        <div id = "preglej_dogodek{{dogodek[5]}}" class = "modal">
             <div class = "modal-content">
                 <h4>{{dogodek[0]}}</h4>
                 <b>Datum dogodka:</b> {{dogodek[1].dan}}.{{dogodek[1].mesec}}.{{dogodek[1].leto}} - {{dogodek[2].dan}}.{{dogodek[2].mesec}}.{{dogodek[2].leto}}
