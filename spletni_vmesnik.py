@@ -45,6 +45,16 @@ def dodaj_dogodek():
     uporabnik.koledar.dodaj_dogodek(ime, datumod, datumdo, opis)
     bottle.redirect("/")
 
+@bottle.post('/dogodki_dodaj_dogodek/')
+def dodaj_dogodek():
+    uporabnik = preveri_prijavo()
+    ime = bottle.request.forms.getunicode('ime_dogodka')
+    opis = bottle.request.forms.getunicode('opis_dogodka')
+    datumod = uporabnik.koledar.oblikuj_datum(bottle.request.forms.getunicode('datumod'))
+    datumdo = uporabnik.koledar.oblikuj_datum(bottle.request.forms.getunicode('datumdo'))
+    uporabnik.koledar.dodaj_dogodek(ime, datumod, datumdo, opis)
+    bottle.redirect("/dogodki/")
+
 @bottle.post('/izbrisi_dogodek<i>/')
 def izbrisi_dogodek(i):
     uporabnik = preveri_prijavo()
