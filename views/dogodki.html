@@ -4,6 +4,7 @@
     <div class="collection">
         %if len(tab) == 0:
             Nimate še nobenih dogodkov.
+        %end
         % for dogodek in tab:
             <a href="#preglej_dogodek{{tab.index(dogodek)}}" class="modal-trigger collection-item" style="text-align:left">
                 {{dogodek[0]}}

@@ -208,11 +208,25 @@ class Uporabnik:
         self.datum = Datum()
         self.koledar = Koledar(self.datum, self.uporabnisko_ime)
 
+    def preveri_geslo(self, vtipkano_geslo):
+        return self.geslo == Uporabnik.zasifriraj_geslo(vtipkano_geslo)
+
+    @staticmethod
+    def zasifriraj_geslo(geslo):
+        sifra = ""
+        for i in geslo:
+            char = ord(i[0])
+            char += 1
+            char = chr(char)
+            sifra += char
+        return sifra
+
     @staticmethod
     def registracija(uporabnisko_ime, geslo):
         b = base.cursor()
         b.execute('SELECT * FROM uporabniki WHERE uporabnisko_ime =?', (uporabnisko_ime,) )
         if(len(b.fetchall()) == 0):
+            geslo = Uporabnik.zasifriraj_geslo(geslo)
             b.execute('INSERT INTO uporabniki (uporabnisko_ime, geslo) VALUES (?, ?)', (uporabnisko_ime, geslo))
             base.commit()
             b.close()
@@ -225,7 +239,7 @@ class Uporabnik:
     def prijava(uporabnisko_ime, geslo):
         uporabnik = Uporabnik.vrniUporabnika(uporabnisko_ime)
         if uporabnik:
-            if uporabnik.geslo != geslo:
+            if  not uporabnik.preveri_geslo(geslo):
                 raise ValueError("Geslo je napačno!")
             else:
                 return Uporabnik(uporabnisko_ime, geslo)
