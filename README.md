@@ -2,11 +2,11 @@
 
 ## Kazalo
 
-* [Splosne_informacije](#Splošne informacije)
+* [Splošne informacije](#Splosne_informacije)
 * [Avtorji](#Avtorji)
-* [Pomoc_pri_uporabi](Pomoč pri uporabi)
+* [Pomoč pri uporabi](#Pomoc_pri_uporabi)
 
-## Splosne_informacije
+## Splošne informacije
 
 Projekt je spletna stran, ki nam omogoča, da ustvarimo svoj račun ter si na preglednem koledarju ogledujemo dogodke.
 Koledar nam prikazuje tudi različne slovenske praznike, ter nam omogoča da tudi sami dodamo svoje dogodke s imeni,
@@ -16,7 +16,7 @@ datumi ter opisom.
 
 * Valerij Jovanov
 
-## Pomoc_pri_uporabi
+## Pomoč pri uporabi
 
 Zaženemo spletni vmesnik ter se povežemo na spletno stran. Ta nas preusmeri na stran za vpis kjer pritisnemo gumb
 registracija ter si ustvarimo račun. Ko storimo to nas vmesnik preusmeri na osnovno stran s koledarjem. Dogodek dodamo
