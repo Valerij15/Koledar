@@ -64,13 +64,20 @@ def dodaj_dogodek():
     uporabnik = preveri_prijavo()
     ime = bottle.request.forms.getunicode('ime_dogodka')
     opis = bottle.request.forms.getunicode('opis_dogodka')
+    datumod = bottle.request.forms.getunicode('datumod')
+    datumdo = bottle.request.forms.getunicode('datumdo')
+
+    if(datumdo ==  '' or datumod == ''):
+        return bottle.template('dogodki.html', tab=uporabnik.koledar.naredi_urejeno_tabelo(), uporabnik=uporabnik.uporabnisko_ime, stran="dogodki", napaka="Napačna oblika datumov!")
+    
     try:
-        datumod = uporabnik.koledar.oblikuj_datum(
-            bottle.request.forms.getunicode('datumod'))
-        datumdo = uporabnik.koledar.oblikuj_datum(
-            bottle.request.forms.getunicode('datumdo'))
+        datumod = uporabnik.koledar.oblikuj_datum(datumod)
+        datumdo = uporabnik.koledar.oblikuj_datum(datumdo)
+        if(datumod.je_vecji_od(datumdo)):
+            return bottle.template('dogodki.html', tab=uporabnik.koledar.naredi_urejeno_tabelo(), uporabnik=uporabnik.uporabnisko_ime, stran="dogodki", napaka="Napačna oblika datumov!")
         uporabnik.koledar.dodaj_dogodek(ime, datumod, datumdo, opis)
         bottle.redirect("/dogodki/")
+
     except ValueError as e:
         return bottle.template('dogodki.html', tab=uporabnik.koledar.naredi_urejeno_tabelo(), uporabnik=uporabnik.uporabnisko_ime, stran="dogodki", napaka=e.args[0])
 
