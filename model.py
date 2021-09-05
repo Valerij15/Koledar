@@ -52,17 +52,18 @@ class Koledar:    #razred, ki opravlja s dogodki ter dnevi na koledarju.
                 dogodek[2]), Datum.spremeni_v_datum(dogodek[3]), dogodek[4]))
 
     def dodaj_dogodek(self, ime, časod, časdo=0, opis=''):  #metoda ki doda dogodek v podatkovno bazo ter tabelo dogodkov
-        b = base.cursor()
-        if(časdo == 0 or časod.je_vecji_od(časdo)): 
-            časdo = časod
-        b.execute('INSERT INTO dogodki (id, ime, datumod, datumdo, opis, ime_uporabnika) VALUES (?, ?, ?, ?, ?, ?)',
-                  (self.stevilo_dogodkov, ime, časod.oblika_za_bazo(), časdo.oblika_za_bazo(), opis, self.ime_uporabnika))
-        base.commit()
-        b.close()
-        self.dogodki.append(
-            Dogodek(self.stevilo_dogodkov, ime, časod, časdo, opis))
-        self.stevilo_dogodkov += 1
-        self.tabela_datumov = self.naredi_tabelo_datumov()
+        if (ime != ''):
+            b = base.cursor()
+            if(časdo == 0 or časod.je_vecji_od(časdo)): 
+                časdo = časod
+            b.execute('INSERT INTO dogodki (id, ime, datumod, datumdo, opis, ime_uporabnika) VALUES (?, ?, ?, ?, ?, ?)',
+                    (self.stevilo_dogodkov, ime, časod.oblika_za_bazo(), časdo.oblika_za_bazo(), opis, self.ime_uporabnika))
+            base.commit()
+            b.close()
+            self.dogodki.append(
+                Dogodek(self.stevilo_dogodkov, ime, časod, časdo, opis))
+            self.stevilo_dogodkov += 1
+            self.tabela_datumov = self.naredi_tabelo_datumov()
 
     def izbrisi_dogodek(self, id): #metoda ki odstrani dogodek iz podatkovne baze ter tabele dogodkov
         b = base.cursor()
@@ -166,6 +167,7 @@ class Koledar:    #razred, ki opravlja s dogodki ter dnevi na koledarju.
             elif(dogodek.datum.je_enak(danes)):
                 tab.insert(0, (dogodek.ime, dogodek.datum,
                            dogodek.datumdo, dogodek.opis, "danes", dogodek.id))
+            n = 0
         return tab
 
 
